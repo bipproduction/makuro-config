@@ -43,7 +43,6 @@
             <button style="width: fit-content;" id="copy" hidden>copy</button>
         </div>
     </div>
-    <button id="test">Test</button>
     <script>
 
         $('#btn').click(async () => {
@@ -66,21 +65,6 @@
                 $("#copy").text('Copied!');
             })
         });
-
-        // GET /test with authorization header
-        $('#test').click(() => {
-            fetch('/test', {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Basic ' + btoa('admin:admin')
-                }
-            })
-                .then(res => {
-                    if (res.ok) {
-                        alert('success')
-                    }
-                })
-        })
 
     </script>
 </body>
