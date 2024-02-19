@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- import jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div style="display: flex; gap: 10px;">
+        <button id="logout">Logout</button>
+        <a href="/dev">Dev</a>
+    </div>
+
+    <div style="display: flex; gap: 10px; padding: 8px;">
+
+        <!-- create new apikey button -->
+        <div
+            style="border-radius: 4px; display: flex; flex-direction: column; width: fit-content; padding: 8px; gap: 10px; background-color: rgb(37, 37, 83); color: aliceblue;">
+            <h3>Create ApiKey</h3>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" placeholder="name">
+
+            <!-- expired date -->
+            <label for="expired_date">Expired Date</label>
+            <input type="date" name="expired_date" id="expired_date" placeholder="expired_date" >
+            <button id="createApiKey">Create ApiKey</button>
+        </div>
+
+        <div style="background-color: aliceblue; padding: 8px;">
+            <div>
+                <div>Token</div>
+                <input id="token" type="password" readonly
+                    style="word-wrap: break-word; text-wrap: wrap; width: 300px;" />
+            </div>
+
+            <div>
+                <!-- list apkey -->
+                <div>
+                    <h3>List ApiKey</h3>
+                    <div id="listApiKey"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script type="module" defer>
+        import chekLoginToken from "./script/chek_login_token.js";
+        import scriptHome from "./script/home.js";
+
+        ; (async () => {
+            await chekLoginToken();
+            await scriptHome()
+        })()
+    </script>
+
+</body>
+
+</html>

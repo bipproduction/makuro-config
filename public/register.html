@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <!-- center container -->
+    <div style="display: flex; justify-content: center; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 10px; width: max-content;">
+            <!-- form -->
+            <h1>Register</h1>
+
+            <!-- user name -->
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required>
+
+            <!-- email -->
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+
+            <!-- password -->
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+
+            <button id="register" type="submit">Register</button>
+        </div>
+    </div>
+
+    <script>
+        // register
+        $('#register').click(async () => {
+            const username = $('#username').val();
+            const email = $('#email').val();
+            const password = $('#password').val();
+
+            // check null or empty value
+            if (!username || !email || !password) {
+                return alert('Input cannot be empty');
+            }
+
+            // use fetch to register with method POST
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            // get response
+            const data = await response.json();
+
+            // check is success and go to login page
+            if (data.success) {
+                window.location.href = '/login';
+            } else {
+                alert(data.message);
+            }
+
+
+
+        })
+    </script>
+</body>
+
+</html>

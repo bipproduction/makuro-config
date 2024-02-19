@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dev</title>
+    <!-- import jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <!-- go to home -->
+    <main style="gap: 10px;">
+        <div style="display: flex;">
+            <a href="/home">Home</a>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; gap: 10px; padding: 8px; max-height: 500px;">
+                <div style="width: 300px; padding: 8px; background-color: aliceblue;">
+                    <h3>New Config</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label for="name">name</label>
+                        <input placeholder="name" name="name" id="name" type="text">
+                        <label for="value">value</label>
+                        <input placeholder="value" name="value" id="value" type="text">
+                        <button style="width: fit-content;" id="create_config">Create</button>
+                    </div>
+                </div>
+                <div>
+                    <h3>List Config</h3>
+                    <div id="list_config"></div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; padding: 8px;">
+                <div
+                    style="display: flex; flex-direction: column; gap: 10px; width: 300px; padding: 8px; background-color: aliceblue;">
+                    <h3>Json Config</h3>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import check_login from "./script/chek_login_token.js";
+        ; (async () => {
+            await check_login()
+
+
+            $('#create_config').click(async () => {
+                const name = $('#name').val();
+                const value = $('#value').val();
+
+                // check name and value empty
+                if (!name || !value) {
+                    return alert('Input cannot be empty');
+                }
+
+                const result = await fetch('/config-create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ name, value })
+                })
+
+                const data = await result.json()
+                if (!data.success) {
+                    return alert(data.message)
+                }
+
+                // clear name and value
+                $('#name').val('')
+                $('#value').val('')
+
+                await loadListConfig()
+
+            })
+
+            await loadListConfig()
+
+        })()
+
+        async function loadListConfig() {
+            const res_config = await fetch('/config-list', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+
+            const data = await res_config.json()
+
+            if (!data.success) {
+                return alert(data.message)
+            }
+
+            $('#list_config').html(data.data.map((x, k) => `<div style="display: flex; gap: 10px; padding: 8px; flex-direction: column;">
+                <div ">${x.name} </div> 
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <input data-id="${x.id}" style="width: 300px;" type="password" readonly value="${x.value} id="input_${k} "/>
+                    <div style="display: flex; gap: 10px;">
+                        <button data-value="${x.value}" data-id="${x.id}" class="copy" style="width: fit-content;" id="copy_${k}" >copy</button>
+                        <button data-value="${x.value}" data-id="${x.id}" class="delete" style="width: fit-content;" id="delete_${k}" >delete</button>
+                    </div>
+                </div>
+            </div>`).join(''))
+
+            // copy button to clipboard
+            $('.copy').click(async (e) => {
+                const value = $(e.target).data('value')
+                const id = $(e.target).data('id')
+                const text = `${value}`
+
+                // copy to clipboard
+                navigator.clipboard.writeText(text);
+
+                // toogle text
+                $(e.target).text('copied');
+
+                setTimeout(() => {
+                    $(e.target).text('copy');
+                }, 1000)
+
+            })
+
+            // delete config
+            $('.delete').click(async (e) => {
+                const id = $(e.target).data('id')
+
+                const result = await fetch('/config-delete', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ id })
+                })
+
+                const data = await result.json()
+
+                if (!data.success) {
+                    return alert(data.message)
+                }
+
+                await loadListConfig()
+
+            })
+
+        }
+    </script>
+
+</body>
+
+</html>

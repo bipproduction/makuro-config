@@ -1,0 +1,1 @@
+module.exports = new (require('cryptr'))("makuro", { encoding: 'base64', pbkdf2Iterations: 10000, saltLength: 100 })

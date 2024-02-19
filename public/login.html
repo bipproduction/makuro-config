@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <!-- login form center -->
+    <div style="display: flex; justify-content: center; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 10px; width: max-content;">
+            <!-- form -->
+            <h1>Login</h1>
+
+            <!-- email -->
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" required>
+
+            <!-- password -->
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+
+            <button id="login" type="submit">Login</button>
+
+            <!-- if not have account then go to /register -->
+            <!-- <a href="/register">Register</a> -->
+        </div>
+    </div>
+
+    <script>
+        // check if already login then go to /home
+        if (localStorage.getItem('token')) {
+            window.location.href = '/home';
+        }
+
+        // proccess login
+        $('#login').click(async () => {
+            const email = $('#email').val();
+            const password = $('#password').val();
+
+            // check null or empty value
+            if (!email || !password) {
+                return alert('Input cannot be empty');
+            }
+
+            // use fetch to login with method POST
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+
+            // get response
+            const data = await response.json();
+
+            // check is success
+            if (data.success) {
+                localStorage.setItem('token', data.token);
+                window.location.href = '/home';
+            } else {
+                alert(data.message);
+            }
+        })
+    </script>
+
+</body>
+
+</html>

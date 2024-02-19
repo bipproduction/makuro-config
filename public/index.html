@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <style>
+        /* dark themes */
+        body {
+            background-color: #1f1b34;
+            color: #fff;
+        }
+
+        /* font ubuntu mono */
+        body {
+            font-family: 'Ubuntu Mono', monospace;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Config Crypt</h1>
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: flex-start;">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 8px;">
+            <h3>Input Value</h3>
+            <input placeholder="Masukkan nilai" id="input" style="width: 500px; padding: 8px;" />
+            <button id="btn" style="width: fit-content;">Submit</button>
+        </div>
+        <div style="
+            position: static; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            padding: 8px; 
+            width: 400px;
+            ">
+            <h3>Result</h3>
+            <pre id="result" style="overflow-wrap: break-word; text-wrap: wrap;"></pre>
+            <button style="width: fit-content;" id="copy" hidden>copy</button>
+        </div>
+    </div>
+    <button id="test">Test</button>
+    <script>
+
+        $('#btn').click(async () => {
+            if (!$('#input').val()) {
+                return alert('Input cannot be empty');
+            }
+            const value = $('#input').val();
+            const result = await $.get('/encrypt/' + value);
+            $('#result').text(result);
+            $("#input").val('');
+
+            // show button copy
+            $("#copy").show();
+
+            // copy clipboard
+            $("#copy").click(() => {
+                navigator.clipboard.writeText(result);
+
+                // toas success
+                $("#copy").text('Copied!');
+            })
+        });
+
+        // GET /test with authorization header
+        $('#test').click(() => {
+            fetch('/test', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Basic ' + btoa('admin:admin')
+                }
+            })
+                .then(res => {
+                    if (res.ok) {
+                        alert('success')
+                    }
+                })
+        })
+
+    </script>
+</body>
+
+</html>
