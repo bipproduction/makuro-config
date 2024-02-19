@@ -213,8 +213,8 @@ yargs
         yargs => yargs
             .options({
                 port: {
+                    alias: "p",
                     type: 'number',
-                    demandOption: true,
                     default: 3000
                 }
             }),
@@ -230,8 +230,8 @@ yargs
  * @param {object} _argv - The command line arguments containing the port information.
  */
 async function funStart(_argv) {
-    app.listen(_argv.port, () => {
-        console.log(`Server running at http://localhost:${_argv.port}/`);
+    app.listen(_argv.p, () => {
+        console.log(`Server running at http://localhost:${_argv.p}/`);
     });
 }
 
