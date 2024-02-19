@@ -69,7 +69,7 @@ async function loadListApikey() {
             <div>${apiKey.expiresAt ? (new Date(apiKey.expiresAt).toLocaleDateString("id")) : 'null'}</div>
            <div style="display: flex; gap: 10px;">
             <button class="btn-show" data-key="${key}" data-apikey="${apiKey.key}" style="width: fit-content;" id="show${key}">show</button>
-            <button class="btn-show" data-key="${key}" data-apikey="${apiKey.key}" style="width: fit-content;" id="copy${key}" >copy</button>
+            <button class="btn-copy" data-key="${key}" data-apikey="${apiKey.key}" style="width: fit-content;" id="copy${key}" >copy</button>
             <button class="btn-delete" data-key="${key}" data-apikey="${apiKey.key}" data-id="${+apiKey.id}" style="width: fit-content;" id="delete${key}">delete</button>
             </div>
         </div>`).join('')
@@ -82,7 +82,7 @@ async function loadListApikey() {
     })
 
     // click copy
-    $('.btn-show').click(function () {
+    $('.btn-copy').click(function () {
         const key = $(this).data('key');
         const text = $(this).data('apikey');
         navigator.clipboard.writeText(text);
