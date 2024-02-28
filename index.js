@@ -11,10 +11,12 @@ const prisma = require('./utils/prisma');
 const api_create_apikey = require('./router/api/api_create_apikey');
 const check_authorization = require('./utils/check_authorization');
 const moment = require('moment');
+const cors = require('cors');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "./public")));
+app.use(cors());
 
 app.get('/encrypt/:value?', (req, res) => {
     const value = req.params.value
